@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vega-Lite Bar Chart</title>
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.18.2"></script>
+
+    <style media="screen">
+      /* Add space between Vega-Embed links  */
+      .vega-actions a {
+        margin-right: 5px;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <h1>Visualization Lab 9</h1>
+    <!-- Container for the visualization -->
+    <div class = 'select'>
+
+    <select name="selection" id="selection">
+        <option value="Carbon">Carbon Dioxide Emissions</option>
+        <option value="Emission_Type">Carbon Emissions by Type</option>
+        <option value="Temp">Avg. Temperature</option>
+        <option value="Cost">Cost of Sea Level Rise</option>
+        <option value="State_Temp">State Temperature</option>
+        <option value="State">State Exploration</option>
+        
+      </select>
+    </div>
+
+    <!-- Still implementing logic on using this to update below -->
+    <div class = 'select_2'>
+
+        <ul class="select_3">
+            <li>
+              <input type="radio" id="Carbon" name="amount" />
+              <label for="Carbon">CO2 Emissions</label>
+            </li>
+            <li>
+              <input type="radio" id="Emission" name="amount" />
+              <label for="Emission">CO2 Emission by Industry</label>
+            </li>
+            <li>
+              <input type="radio" id="Temp" name="amount" />
+              <label for="Temp">Average Temperature</label>
+            </li>
+            <li>
+              <input type="radio" id="Cost" name="amount" />
+              <label for="Cost">Cost of Sea Level Rise</label>
+            </li>
+            <li>
+              <input type="radio" id="State_Temp" name="amount" />
+              <label for="State_Temp">State Temperature Map</label>
+            </li>
+            <li>
+              <input type="radio" id="State" name="amount" />
+              <label for="State">State Exploration</label>
+            </li>
+        </ul>
+            
+    </div>
+
+    <div class = 'row'>
+    <div class = 'column' id="vis_1"></div>
+    <div class = 'column'id="vis_2"></div>
+    </div>
+    <div class = 'row'>
+    <div class = 'column'id="vis_3"></div>
+    </div>
+
+    <script>
+
+    //Assign different graph renders with differing datasets
+    var Temperature = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.1.1.json",
+
+        "description": "Lab 9",
+        "title": "Average Annual Temperature (ºF)",
+        "data": {"url": "temperature.csv"},
+
+        "vconcat": [ {
+        "width": 700,
+        "height": 500,
+        "layer": [
+        {
+            "mark": { "type": "line", "tooltip": true},
+            "encoding": {
+                "x": {"field": "date", "type": "temporal"},
+                "y": {"field": "temp", "type": "quantitative", "scale": {"domain": [50,55]}}
+                
+            }
+        },
+        {
+            "mark": {
+                "type": "line",
+                "color": "firebrick"
+            },
+            "transform": [
+                {
+                "regression": "temp",
+                "on": "date"
+                }
+            ],
+            "encoding": {
+                "x": {
+                "field": "date",
+                "type": "temporal"
+                },
+                "y": {
+                "field": "temp",
+                "type": "quantitative"
+                }
+            }
+        }]
+        
+        }],
+    };
+
+    var US_Carbon = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.1.1.json",
+
+        "description": "Lab 9",
+        "title": "US Carbon Annual Emmisions (Billion Tons/Year)",
+        "data": {"url": "USCarbon.csv"},
+
+        "vconcat": [ {
+        "width": 700,
+        "height": 500,
+        "mark": { "type": "line", "tooltip": true},
+        "encoding": {
+            "x": {"field": "date", "type": "temporal"},
+            "y": {"field": "carbon", "type": "quantitative", "axis": {"format": "e"}}  
+        },
+        }],
+    };
+    var Global_Carbon = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.1.1.json",
+
+        "description": "Lab 9",
+        "title": "Global Annual Carbon Emmisions (Billion Tons/Year)",
+        "data": {"url": "co2_global.csv"},
+
+        "vconcat": [ {
+        "width": 700,
+        "height": 500,
+        "mark": { "type": "line", "tooltip": true},
+        "encoding": {
+            "x": {"field": "date", "type": "temporal"},
+            "y": {"field": "carbon", "type": "quantitative"}  
+        },
+        }],
+    };
+
+    var Per_Capita = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.1.1.json",
+
+        "description": "Lab 9",
+        "title": "US Per Capita Carbon Emmisions (Tons/Year)",
+        "data": {"url": "per_capita.csv"},
+
+        "vconcat": [ {
+        "width": 700,
+        "height": 500,
+        "mark": { "type": "line", "tooltip": true},
+        "encoding": {
+            "x": {"field": "date", "type": "temporal"},
+            "y": {"field": "carbon", "type": "quantitative"}  
+        },
+        }],
+    };
+
+    var Emission_Type = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.1.1.json",
+
+        "description": "Lab 9",
+        "title": "US Per Capita Carbon Emmisions (Tons/Year)",
+        "data": {"url": "emission_type.csv"},
+        "repeat": {
+            "layer": ['oil',"coal",'gas','cement','flaring','other']
+        },
+        "spec": {
+        "width": 700,
+        "height": 500,
+        "mark": { "type": "area", "tooltip": true},
+        "encoding": {
+            "x": {"field": "date", "type": "temporal"},
+            "y": {"aggregate": "sum", "field": {"repeat": "layer"}, "type": "quantitative" },
+            "color": {
+            "datum": {"repeat": "layer"},
+            "type": "nominal"
+      }
+        },
+        },
+    };
+
+
+    //CANT FIGURE OUT HOW TO DO GEOJSON WITH VEGA
+    var State_Temp = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.1.1.json",
+
+        "description": "Lab 9",
+        "title": "US Per Capita Carbon Emmisions (Tons/Year)",
+        "data": {"url": "state_temp.csv"},
+        "transform": [
+            {"calculate": "datum.Date%10", "as": "b2"},
+            {"filter": "datum.b2 == 3"},
+            {"filter": "datum.LocationID >= 3500"},
+         ],
+        "vconcat": [ {
+        "width": 700,
+        "height": 500,
+        "mark": { "type": "line", "tooltip": true},
+        "encoding": {
+            "x": {"field": "Date", "type": "quantitative"},
+            "y": {"field": "Value", "type": "quantitative"},
+            "color": {
+            "field": "Location",
+            "scale": {"scheme": "category20b"}
+            }
+        },
+        }],
+    };
+
+    var Cost = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "title": "Estimated Cost of Sea Level Rise by 2100 (Billions of USD)",
+        "description": "Estimated Cost of Sea Level Rise by 2100 (Billions of USD)",
+        "width": 700,
+        "height": 500,
+        "data": {"url": "sealevel_cost.csv"},
+        "mark": {"type": "bar", "tooltip": true},
+        "encoding": {
+            "x": {"field": "state", "type": "nominal", "sort": "y"},
+            "y": {"field": "cost", "type": "quantitative", "sort": "ascending"}
+        }
+    };
+
+    function RadioValue() {
+        var x = document.getElementsByName('.select_3');
+            
+        for(i = 0; i < x.length; i++) {
+            if(x[i].checked)
+            var result = x[i].value;
+            return result
+        }
+    }
+
+
+
+    //Assign select variable
+    const select = document.querySelector('#selection');
+
+    //Initialize default graphs
+    vegaEmbed('#vis_1', US_Carbon);
+    vegaEmbed('#vis_2', Per_Capita);
+    vegaEmbed('#vis_3', Global_Carbon);
+
+    //Conditional Render for Selections
+
+    select.onchange = (event) => {
+        
+        event.preventDefault();
+        
+        if (select.value === 'Carbon'){
+            vegaEmbed('#vis_1', US_Carbon);
+            vegaEmbed('#vis_2', Per_Capita);
+            vegaEmbed('#vis_3', Global_Carbon);
+        }
+        else if (select.value === 'Temp'){
+            vegaEmbed('#vis_1', Temperature);
+            //Clear bottom graphs
+            document.querySelector('#vis_2').innerHTML = 'This is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go!';
+            document.querySelector('#vis_3').innerHTML = '';
+        }
+        else if (select.value === 'State_Temp'){
+            vegaEmbed('#vis_1', State_Temp);
+            //Clear bottom graphs
+            document.querySelector('#vis_2').innerHTML = 'This is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go!';
+            document.querySelector('#vis_3').innerHTML = '';
+        }
+        else if (select.value === 'Cost'){
+            vegaEmbed('#vis_1', Cost);
+            //Clear bottom graphs
+            document.querySelector('#vis_2').innerHTML = 'This is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go!';
+            document.querySelector('#vis_3').innerHTML = '';
+        }
+        else if (select.value === 'Emission_Type'){
+            vegaEmbed('#vis_1', Emission_Type);
+            //Clear bottom graphs
+            document.querySelector('#vis_2').innerHTML = 'This is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go! his is filler text that I am putting here to show where our brief descriptions will go!';
+            document.querySelector('#vis_3').innerHTML = '';
+        }
+    };
+
+    </script>
+  </body>
+</html>

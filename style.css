@@ -1,0 +1,64 @@
+body { 
+    padding:30px;
+}
+#selection {
+    padding: 7px;
+    margin-bottom: 30px;
+    width:300px;
+}
+
+.select_2{
+    padding-bottom: 30px;
+    margin-bottom:20px;
+}
+
+.select_3 {
+    list-style-type: none;
+    margin: 25px 0 0 0;
+    padding-bottom: 30px;
+    margin-bottom:20px;
+    text-align:center;
+  }
+  
+  .select_3 li {
+    float: left;
+    margin: 0px;
+    width: 250px;
+    height: 40px;
+    position: relative;
+    background:rgb(255, 111, 45);
+    padding:10px;
+  }
+  
+  .select_3 label,
+  .select_3 input {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .select_3 input[type="radio"] {
+    opacity: 0.01;
+    z-index: 100;
+  }
+  
+  .select_3 input[type="radio"]:checked+label,
+  .Checked+label {
+    background: rgb(255, 206, 173);
+  }
+  
+  .select_3 label {
+    color:white;
+    padding: 7.5px;
+    text-align:center;
+    cursor: pointer;
+    z-index: 90;
+    margin-bottom:0px;
+  }
+  
+  .select_3 label:hover {
+    background: #DDD;
+  }
